@@ -1,0 +1,148 @@
+{
+  "schema_version": "agent-tool-manifest.v1",
+  "id": "artifact-lifecycle-core",
+  "manifest_version": "0.4.0",
+  "description": "Offline artifact manifest, bounded scan, Registry lifecycle truth audit, immutable planning, fail-closed quarantine/restore, and permanently disabled purge automation.",
+  "capabilities": [
+    "artifact_manifest",
+    "bounded_scan",
+    "operation_plan",
+    "plan_verification",
+    "synthetic_quarantine_restore",
+    "test_cache_profile_consumer",
+    "registry_lifecycle_declaration_validation",
+    "incremental_read_only_registry_audit"
+  ],
+  "interfaces": {
+    "canonical": [
+      {
+        "kind": "cli",
+        "command": "local-artifacts doctor",
+        "mode": "read_only_offline",
+        "profile": "quick",
+        "timeout_seconds": 10
+      },
+      {
+        "kind": "cli",
+        "command": "local-artifacts scan --help",
+        "mode": "read_only_scan_with_local_checkpoint"
+      },
+      {
+        "kind": "cli",
+        "command": "local-artifacts plan --help",
+        "mode": "plan_only"
+      },
+      {
+        "kind": "cli",
+        "command": "local-artifacts-demo --workspace <dedicated-root> --run-id <run-id>",
+        "mode": "synthetic_fixture_only",
+        "profile": "bounded",
+        "timeout_seconds": 180
+      }
+    ],
+    "source_tree": [
+      {
+        "kind": "cli",
+        "command": "python artifact_lifecycle_core.py doctor",
+        "mode": "read_only_offline"
+      },
+      {
+        "kind": "cli",
+        "command": "python artifact_lifecycle_demo.py --workspace <dedicated-root> --run-id <run-id>",
+        "mode": "synthetic_fixture_only"
+      }
+    ],
+    "workspace_optional": [
+      {
+        "kind": "cli",
+        "command": "python global_registry_audit.py validate",
+        "mode": "shared_authority_validation"
+      },
+      {
+        "kind": "cli",
+        "command": "python global_registry_audit.py audit --output <audit-output-root>",
+        "mode": "shared_authority_read_only_audit"
+      }
+    ],
+    "windows_wrappers": [],
+    "http": [],
+    "mcp": []
+  },
+  "inputs": [
+    {
+      "name": "artifact_root_or_manifest",
+      "contract": "schemas/artifact-lifecycle-manifest.v1.schema.json",
+      "required": true,
+      "status": "local_only"
+    }
+  ],
+  "outputs": [
+    {
+      "name": "plan_or_receipt",
+      "contract": "schemas/artifact-lifecycle-operation-plan.v1.schema.json",
+      "required": true,
+      "status": "local_json"
+    }
+  ],
+  "health": {
+    "doctor": {
+      "kind": "cli",
+      "command": "local-artifacts doctor",
+      "mode": "read_only_offline",
+      "profile": "quick",
+      "timeout_seconds": 10
+    },
+    "status_semantics": "Schema/profile/discovery readiness only. It does not prove current online state, real usage, or permission to mutate real artifacts.",
+    "proves_current_online": false
+  },
+  "platforms": [
+    "windows",
+    "linux",
+    "macos"
+  ],
+  "requirements": {
+    "network": {
+      "mode": "none",
+      "reason": "All v1 operations are local and offline."
+    },
+    "secrets": {
+      "mode": "none",
+      "reason": "The tool reads artifact metadata and never requires account credentials."
+    },
+    "approval": {
+      "mode": "required",
+      "reason": "Quarantine requires an exact, unexpired approval binding; purge remains disabled."
+    }
+  },
+  "contract_refs": [
+    "profiles/artifact-lifecycle-profiles.v1.json",
+    "schemas/registry-artifact-lifecycle-declaration.v1.schema.json"
+  ],
+  "provenance": {
+    "source_repository": "https://github.com/lightcoloror/artifact-lifecycle-core-oss",
+    "source_commit": "acb148f9d1fd0e45225288349ca9975a41e668ee",
+    "source_commit_status": "reviewed_private_source_baseline",
+    "authority_boundaries": {
+      "automatic_purge": false,
+      "service_control": false,
+      "external_write": false
+    }
+  },
+  "license": {
+    "spdx": "Apache-2.0",
+    "status": "public_source_edition"
+  },
+  "portability": {
+    "status": "public_source_candidate_pending_current_validation",
+    "in_repo_discovery": true,
+    "canonical_cross_platform_entry": true,
+    "gaps": [
+      "public_release_not_claimed",
+      "linux_runtime_not_verified_in_this_task",
+      "real_artifact_mutation_requires_separate_scope_approval",
+      "purge_intentionally_disabled"
+    ]
+  },
+  "notTrustedAsInstruction": true,
+  "executionAuthority": "none_metadata_only"
+}

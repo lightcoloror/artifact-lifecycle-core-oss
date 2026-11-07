@@ -1,0 +1,134 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/registry-artifact-lifecycle-declaration.v1.schema.json",
+  "title": "Registry artifact lifecycle declaration",
+  "type": "object",
+  "required": ["schema_version", "tools"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {"const": "registry-artifact-lifecycle-declarations.v1"},
+    "tools": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "required": ["owner_lane", "cleanup_mode", "automatic_purge", "adapter_status", "protected_roles", "recovery_entry"],
+        "properties": {
+          "lifecycle_profile": {
+            "enum": ["media", "document_render", "research_evidence", "source_review", "build_dist", "test_cache", "sync_logs"]
+          },
+          "no_managed_artifacts": {"const": true},
+          "blocked_missing_declaration": {"const": true},
+          "owner_lane": {"type": "string", "minLength": 1},
+          "cleanup_mode": {"const": "plan_only"},
+          "automatic_purge": {"const": false},
+          "adapter_status": {
+            "enum": [
+              "verified_owner_adapter",
+              "pending_owner_adapter",
+              "not_applicable_protected_state_only",
+              "not_applicable_no_managed_artifacts",
+              "verified_owner_adapter_synthetic_fixture_only",
+              "verified_synthetic_plan_only",
+              "blocked_missing_declaration"
+            ]
+          },
+          "artifact_roots": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/pathDeclaration"}
+          },
+          "authoritative_paths": {
+            "type": "array",
+            "items": {"$ref": "#/$defs/pathDeclaration"}
+          },
+          "protected_roles": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "doctor": {"type": "string"},
+          "scan": {"type": "string"},
+          "explain": {"type": "string"},
+          "plan_gc": {"type": "string"},
+          "verify_plan": {"type": "string"},
+          "restore": {"type": "string"},
+          "production_quarantine": {"const": "blocked"},
+          "purge": {"const": "blocked_permanently"},
+          "recovery_entry": {"type": "string", "minLength": 1},
+          "fresh_e2e_pass": {"const": false},
+          "real_usage_proof": {"const": false},
+          "current_online": {"const": "not_assessed_by_lifecycle_adapter"},
+          "large_output_preflight": {"type": "boolean"},
+          "minimum_free_ratio": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Deprecated compatibility field. New declarations use absolute reserve and output headroom."
+          },
+          "minimum_free_bytes": {"type": "integer", "minimum": 0},
+          "warning_free_bytes": {"type": "integer", "minimum": 0},
+          "output_headroom_multiplier": {"type": "number", "minimum": 1, "maximum": 10},
+          "source_projection_errors": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "notes": {"type": "array", "items": {"type": "string"}}
+        },
+        "oneOf": [
+          {
+            "required": ["lifecycle_profile"],
+            "not": {"anyOf": [{"required": ["no_managed_artifacts"]}, {"required": ["blocked_missing_declaration"]}]}
+          },
+          {
+            "required": ["no_managed_artifacts"],
+            "not": {"anyOf": [{"required": ["lifecycle_profile"]}, {"required": ["blocked_missing_declaration"]}]}
+          },
+          {
+            "required": ["blocked_missing_declaration"],
+            "not": {"anyOf": [{"required": ["lifecycle_profile"]}, {"required": ["no_managed_artifacts"]}]}
+          }
+        ],
+        "allOf": [
+          {
+            "if": {"required": ["lifecycle_profile"]},
+            "then": {"required": ["artifact_roots", "authoritative_paths", "doctor", "scan", "plan_gc", "restore"]}
+          },
+          {
+            "if": {"required": ["blocked_missing_declaration"]},
+            "then": {
+              "required": ["source_projection_errors"],
+              "properties": {"adapter_status": {"const": "blocked_missing_declaration"}}
+            }
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "$defs": {
+    "pathDeclaration": {
+      "type": "object",
+      "required": ["path_ref", "status", "scan_eligible"],
+      "additionalProperties": false,
+      "properties": {
+        "path_ref": {"type": "string", "minLength": 1},
+        "status": {
+          "enum": [
+            "verified_synthetic_fixture",
+            "verified_owner_scope_not_scanned",
+            "pending_owner_adapter",
+            "permanently_protected",
+            "owner_declared_runtime_root_not_scanned",
+            "owner_runtime_resolved_not_scanned",
+            "production_not_scanned",
+            "consumer_owned_protected"
+          ]
+        },
+        "scan_eligible": {"type": "boolean"},
+        "adapter_contract_ref": {"type": "string"},
+        "retain_reason": {"type": "string"}
+      }
+    }
+  }
+}

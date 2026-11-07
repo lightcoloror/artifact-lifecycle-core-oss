@@ -1,0 +1,55 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "artifact-lifecycle-core"
+version = "0.2.0"
+description = "Fail-closed local artifact lifecycle contracts and CLI"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {file = "LICENSE"}
+authors = [{name = "lightcoloror"}]
+keywords = ["artifact-lifecycle", "local-tools", "fail-closed", "offline"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Operating System :: OS Independent",
+  "License :: OSI Approved :: Apache Software License",
+]
+dependencies = []
+
+[project.scripts]
+local-artifacts = "artifact_lifecycle_core:main"
+local-artifacts-demo = "artifact_lifecycle_demo:main"
+
+[tool.setuptools]
+py-modules = [
+  "artifact_lifecycle_core",
+  "artifact_lifecycle_demo",
+  "global_registry_audit",
+  "project_artifact_adapter",
+  "research_evidence_adapter",
+  "synthetic_roundtrip_pilot",
+]
+
+[tool.setuptools.data-files]
+"share/artifact-lifecycle-core" = [
+  "AGENT_DISCOVERY.md",
+  "agent-tool-manifest.v1.json",
+  "LICENSE",
+  "NOTICE",
+  "README.md",
+  "README.zh-CN.md",
+  "RELEASE-NOTES.md",
+  "THIRD_PARTY_NOTICES.md",
+]
+"share/artifact-lifecycle-core/docs" = ["docs/CLEAN-COPY.md"]
+"share/artifact-lifecycle-core/profiles" = ["profiles/artifact-lifecycle-profiles.v1.json"]
+"share/artifact-lifecycle-core/schemas" = [
+  "schemas/agent-tool-manifest.v1.schema.json",
+  "schemas/artifact-lifecycle-approval.v1.schema.json",
+  "schemas/artifact-lifecycle-manifest.v1.schema.json",
+  "schemas/artifact-lifecycle-operation-plan.v1.schema.json",
+  "schemas/artifact-lifecycle-operation-receipt.v1.schema.json",
+  "schemas/registry-artifact-lifecycle-declaration.v1.schema.json",
+]

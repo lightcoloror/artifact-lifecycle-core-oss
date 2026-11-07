@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/artifact-lifecycle-core/artifact-lifecycle-manifest.v1.schema.json",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema_version", "manifest_id", "closure_run_id", "producer_tool_id", "owner_lane", "root_identity", "profile_id", "cleanup_mode", "automatic_purge", "artifacts", "manifest_sha256"],
+  "properties": {
+    "schema_version": {"const": "artifact-lifecycle-manifest.v1"},
+    "cleanup_mode": {"const": "plan_only"},
+    "automatic_purge": {"const": false},
+    "profile_id": {"enum": ["media", "document_render", "research_evidence", "source_review", "test_cache", "sync_logs"]},
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["artifact_id", "closure_run_id", "producer_tool_id", "owner_lane", "path", "artifact_role", "digest", "bytes", "lifecycle_state", "storage_state", "depends_on", "referenced_by", "sensitivity", "rebuild_proof", "minimum_keep_until", "pin"]
+      }
+    },
+    "manifest_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/artifact-lifecycle-core/artifact-lifecycle-operation-plan.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plan_id", "operation", "cleanup_mode", "automatic_purge", "created_at", "manifest_sha256", "closure_run_id", "root_identity", "quarantine_root_identity", "gate_evidence", "entries", "authorization_state", "boundary", "plan_sha256"],
+  "properties": {
+    "schema_version": {"const": "artifact-lifecycle-operation-plan.v1"},
+    "operation": {"enum": ["quarantine", "purge"]},
+    "cleanup_mode": {"const": "plan_only"},
+    "automatic_purge": {"const": false},
+    "authorization_state": {"const": "not_authorized"},
+    "entries": {"type": "array"},
+    "plan_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}

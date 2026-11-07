@@ -1,0 +1,210 @@
+{
+  "entries": [
+    {
+      "cleanup_actions": [
+        "preserve_failure_report",
+        "remove_only_package_owned_partial_receipt"
+      ],
+      "cleanup_boundary": "package_owned_files",
+      "fail_closed_state": "rejected",
+      "failure_class": "code_assertion_failure",
+      "kills_user_processes": false,
+      "max_retries": 0,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "test_stage_input_verified",
+      "requires_manifest_reissue": true,
+      "retry_preconditions": [
+        "code_or_fixture_change_requires_new_manifest_hash"
+      ],
+      "retryable": false,
+      "signal_codes": [
+        "ASSERTION_FAILED",
+        "NONZERO_TEST_EXIT"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "remove_only_probe_files",
+        "preserve_acl_diagnostics"
+      ],
+      "cleanup_boundary": "project_local_temp",
+      "fail_closed_state": "needs_attention",
+      "failure_class": "temp_directory_acl",
+      "kills_user_processes": false,
+      "max_retries": 1,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "temp_directory_preflight",
+      "requires_manifest_reissue": false,
+      "retry_preconditions": [
+        "select_project_local_temp",
+        "verify_write_delete_probe"
+      ],
+      "retryable": true,
+      "signal_codes": [
+        "TEMP_ACL_DENIED",
+        "WINERROR_5_TEMP"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "record_spawn_error",
+        "do_not_terminate_unowned_processes"
+      ],
+      "cleanup_boundary": "owned_child_observation_only",
+      "fail_closed_state": "needs_attention",
+      "failure_class": "spawn_eperm",
+      "kills_user_processes": false,
+      "max_retries": 1,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "process_spawn_preflight",
+      "requires_manifest_reissue": false,
+      "retry_preconditions": [
+        "verify_executable_path",
+        "verify_project_local_temp",
+        "no_privilege_bypass"
+      ],
+      "retryable": true,
+      "signal_codes": [
+        "SPAWN_EPERM",
+        "WINERROR_5_SPAWN"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "release_synthetic_lease",
+        "preserve_event_journal"
+      ],
+      "cleanup_boundary": "package_owned_files",
+      "fail_closed_state": "timed_out",
+      "failure_class": "timeout",
+      "kills_user_processes": false,
+      "max_retries": 1,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "last_completed_validation_stage",
+      "requires_manifest_reissue": false,
+      "retry_preconditions": [
+        "journal_reconciled",
+        "same_manifest_hash",
+        "fresh_lease"
+      ],
+      "retryable": true,
+      "signal_codes": [
+        "DEADLINE_EXCEEDED",
+        "LEASE_EXPIRED"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "record_owned_process_identity",
+        "request_human_cleanup",
+        "never_kill_user_process"
+      ],
+      "cleanup_boundary": "owned_child_observation_only",
+      "fail_closed_state": "cancelled",
+      "failure_class": "process_hang",
+      "kills_user_processes": false,
+      "max_retries": 0,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "process_ownership_review",
+      "requires_manifest_reissue": false,
+      "retry_preconditions": [
+        "human_confirms_owned_process_cleanup"
+      ],
+      "retryable": false,
+      "signal_codes": [
+        "NO_PROGRESS_HEARTBEAT",
+        "PROCESS_HANG_OBSERVED"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "preserve_root_diagnostic"
+      ],
+      "cleanup_boundary": "none",
+      "fail_closed_state": "rejected",
+      "failure_class": "fixed_project_root",
+      "kills_user_processes": false,
+      "max_retries": 0,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "project_root_contract",
+      "requires_manifest_reissue": true,
+      "retry_preconditions": [
+        "issue_new_manifest_with_approved_root_policy"
+      ],
+      "retryable": false,
+      "signal_codes": [
+        "PROJECT_ROOT_MISMATCH",
+        "FIXED_ROOT_REQUIRED"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "preserve_both_hashes",
+        "do_not_overwrite_shared_file"
+      ],
+      "cleanup_boundary": "none",
+      "fail_closed_state": "reconcile_required",
+      "failure_class": "shared_file_hash_drift",
+      "kills_user_processes": false,
+      "max_retries": 0,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "shared_file_hash_preflight",
+      "requires_manifest_reissue": true,
+      "retry_preconditions": [
+        "owner_reconciles_drift",
+        "new_manifest_hash_required"
+      ],
+      "retryable": false,
+      "signal_codes": [
+        "SHARED_HASH_DRIFT",
+        "BASELINE_HASH_MISMATCH"
+      ]
+    },
+    {
+      "cleanup_actions": [
+        "discard_only_partial_package_cache_in_project_temp",
+        "preserve_lockfiles"
+      ],
+      "cleanup_boundary": "project_local_temp",
+      "fail_closed_state": "needs_attention",
+      "failure_class": "network_interruption",
+      "kills_user_processes": false,
+      "max_retries": 2,
+      "network_access_allowed": false,
+      "recovery_checkpoint": "network_boundary_preflight",
+      "requires_manifest_reissue": false,
+      "retry_preconditions": [
+        "separate_human_network_approval",
+        "same_dependency_pins",
+        "no_partial_install_reuse"
+      ],
+      "retryable": true,
+      "signal_codes": [
+        "NETWORK_RESET",
+        "DNS_UNAVAILABLE"
+      ]
+    }
+  ],
+  "platform": "windows",
+  "schema_version": "windows-test-failure-catalog.v0.1",
+  "unknown_failure": {
+    "cleanup_actions": [
+      "preserve_diagnostics"
+    ],
+    "cleanup_boundary": "none",
+    "fail_closed_state": "needs_attention",
+    "failure_class": "unclassified_failure",
+    "kills_user_processes": false,
+    "max_retries": 0,
+    "network_access_allowed": false,
+    "recovery_checkpoint": "manual_failure_classification",
+    "requires_manifest_reissue": false,
+    "retry_preconditions": [
+      "add_reviewed_failure_policy_before_retry"
+    ],
+    "retryable": false,
+    "signal_codes": [
+      "UNKNOWN"
+    ]
+  }
+}

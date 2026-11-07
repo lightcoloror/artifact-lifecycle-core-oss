@@ -1,0 +1,39 @@
+{
+  "schema_version": "self-media-artifact-lifecycle-manifest.v2",
+  "manifest_id": "synthetic-self-media-v2",
+  "revision": 1,
+  "updated_at": "2026-08-28T00:00:00Z",
+  "workspace_ref": "synthetic-workspace",
+  "quarantine_dir": ".artifact-quarantine",
+  "policy": {
+    "large_file_threshold_bytes": 1000,
+    "task_intermediate_limit_bytes": 2000,
+    "min_free_ratio": 0.15,
+    "keep_previous_review_versions": 1,
+    "retention_hours": {"machine_failure": 24, "user_rejected": 24, "superseded": 24, "task_cache": 24},
+    "automatic_purge_authorized": false
+  },
+  "artifacts": [
+    {
+      "artifact_id": "synthetic-cache-item",
+      "video_id": "synthetic-video",
+      "path": "cache.txt",
+      "bytes": 25,
+      "artifact_kind": "cache",
+      "status": "candidate",
+      "source_sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "created_at": "2026-08-28T00:00:00Z",
+      "updated_at": "2026-08-28T00:00:00Z",
+      "superseded_by": null,
+      "depends_on": [],
+      "referenced_by": [],
+      "retain_reason": "synthetic fixture",
+      "failure_reason": null,
+      "delete_after": null,
+      "quarantine_path": null,
+      "original_path": null,
+      "purge_approved": false
+    }
+  ],
+  "history": []
+}

@@ -1,0 +1,90 @@
+{
+  "schema_version": "artifact-lifecycle-profiles.v1",
+  "profiles": [
+    {
+      "profile_id": "media",
+      "artifact_roles": ["authoritative_input", "reproducible_derived", "final_deliverable", "evidence_receipt_manifest"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": true,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false
+    },
+    {
+      "profile_id": "document_render",
+      "artifact_roles": ["authoritative_input", "reproducible_derived", "final_deliverable", "evidence_receipt_manifest"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": true,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false
+    },
+    {
+      "profile_id": "research_evidence",
+      "artifact_roles": ["authoritative_input", "evidence_receipt_manifest", "reproducible_derived"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": false,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false
+    },
+    {
+      "profile_id": "source_review",
+      "artifact_roles": ["source_code", "evidence_receipt_manifest", "reproducible_derived"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": false,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false
+    },
+    {
+      "profile_id": "build_dist",
+      "artifact_roles": ["reproducible_derived", "cache_build_test_temp", "evidence_receipt_manifest"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": true,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false
+    },
+    {
+      "profile_id": "test_cache",
+      "artifact_roles": ["cache_build_test_temp", "evidence_receipt_manifest"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": false,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false,
+      "owner_adapter": "scripts/windows_test_runtime.py test-cache",
+      "explicit_root_required": true,
+      "bounded_scan": {
+        "default_max_items": 100,
+        "default_max_nodes_per_item": 10000,
+        "recursive_workspace_scan": false
+      },
+      "retention": {
+        "success": "delete_after_verified_child_exit",
+        "failure_days": 7,
+        "latest_failure_pin_allowed": true,
+        "active_child": "blocked",
+        "missing_lease_or_owner_token": "blocked",
+        "acl_error": "blocked"
+      }
+    },
+    {
+      "profile_id": "sync_logs",
+      "artifact_roles": ["evidence_receipt_manifest", "cache_build_test_temp"],
+      "minimum_free_bytes": 536870912,
+      "warning_free_bytes": 5368709120,
+      "output_headroom_multiplier": 1.25,
+      "large_output_preflight": false,
+      "cleanup_mode": "plan_only",
+      "automatic_purge": false
+    }
+  ]
+}

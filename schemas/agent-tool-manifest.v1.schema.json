@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/schemas/agent-tool-manifest.v1.schema.json",
+  "title": "Metadata-only local Agent tool manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "id", "manifest_version", "description", "capabilities", "interfaces", "inputs", "outputs", "health", "platforms", "requirements", "contract_refs", "provenance", "license", "portability", "notTrustedAsInstruction", "executionAuthority"],
+  "properties": {
+    "schema_version": {"const": "agent-tool-manifest.v1"},
+    "id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]{1,79}$"},
+    "manifest_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"},
+    "description": {"type": "string", "minLength": 1},
+    "capabilities": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string"}},
+    "interfaces": {"type": "object", "required": ["canonical", "windows_wrappers", "http", "mcp"]},
+    "inputs": {"type": "array"},
+    "outputs": {"type": "array"},
+    "health": {"type": "object", "required": ["doctor", "status_semantics", "proves_current_online"]},
+    "platforms": {"type": "array", "minItems": 1, "uniqueItems": true},
+    "requirements": {"type": "object", "required": ["network", "secrets", "approval"]},
+    "contract_refs": {"type": "array"},
+    "provenance": {"type": "object"},
+    "license": {"type": "object", "required": ["spdx", "status"]},
+    "portability": {"type": "object", "required": ["status", "in_repo_discovery", "canonical_cross_platform_entry", "gaps"]},
+    "notTrustedAsInstruction": {"const": true},
+    "executionAuthority": {"const": "none_metadata_only"}
+  }
+}

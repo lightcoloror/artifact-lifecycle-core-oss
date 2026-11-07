@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://local.invalid/artifact-lifecycle-core/artifact-lifecycle-operation-receipt.v1.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "operation", "status", "plan_sha256", "closure_run_id", "completed_at", "items", "filesystem_mutation_scope", "receipt_sha256"],
+  "properties": {
+    "schema_version": {"const": "artifact-lifecycle-operation-receipt.v1"},
+    "operation": {"enum": ["quarantine", "restore", "purge"]},
+    "status": {"enum": ["completed", "blocked", "failed"]},
+    "items": {"type": "array"},
+    "receipt_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+  }
+}
